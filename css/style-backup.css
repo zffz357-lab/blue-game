@@ -1,0 +1,182 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #071426;
+  color: white;
+}
+
+header {
+  background: linear-gradient(135deg, #071b35, #0759a5);
+  padding: 28px 15px;
+  text-align: center;
+  border-bottom: 2px solid #168cff;
+}
+
+header h1 {
+  margin: 0;
+  color: #62b7ff;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+
+header p {
+  color: #d5eaff;
+  margin-bottom: 0;
+}
+
+main {
+  padding: 16px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.welcome {
+  background: #102b48;
+  border: 1px solid #1768a9;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcome h2 {
+  color: #62b7ff;
+}
+
+.welcome p {
+  color: #c5d9ed;
+  font-size: 14px;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.menu button {
+  background: #102b48;
+  color: white;
+  border: 1px solid #1768a9;
+  border-radius: 13px;
+  padding: 22px 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.menu button:active {
+  background: #0759a5;
+  transform: scale(0.97);
+}
+
+@media (max-width: 350px) {
+  .menu {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.stat {
+  background: #102b48;
+  border: 1px solid #1768a9;
+  border-radius: 12px;
+  padding: 13px 5px;
+  text-align: center;
+}
+
+.stat span {
+  display: block;
+  color: #b9d5ee;
+  font-size: 12px;
+}
+
+.stat strong {
+  display: block;
+  color: #62b7ff;
+  font-size: 23px;
+  margin-top: 7px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 20px 0 12px;
+}
+
+.section-title h2 {
+  font-size: 18px;
+}
+
+#addDevice {
+  background: #087bd1;
+  color: white;
+  border: 0;
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.devices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.device {
+  background: #102b48;
+  border: 1px solid #1768a9;
+  border-radius: 14px;
+  padding: 16px 10px;
+  text-align: center;
+}
+
+.device h3 {
+  color: #62b7ff;
+  margin: 5px;
+}
+
+.device p {
+  color: #c5d9ed;
+  font-size: 13px;
+}
+
+.device.free {
+  border-bottom: 4px solid #19c784;
+}
+
+.device.busy {
+  border-bottom: 4px solid #ff5555;
+}
+
+.device button {
+  width: 100%;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px;
+  background: #087bd1;
+  color: white;
+  font-weight: bold;
+}
+
+.menu {
+  margin-top: 25px;
+}
+
+@media (max-width: 350px) {
+  .devices {
+    grid-template-columns: 1fr;
+  }
+}

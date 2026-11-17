@@ -1,0 +1,11 @@
+{
+  "name": "BLUE GAME",
+  "short_name": "BLUE GAME",
+  "description": "نظام إدارة صالة البلايستيشن",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#071426",
+  "theme_color": "#071b35",
+  "lang": "ar",
+  "dir": "rtl"
+}

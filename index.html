@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071426">
+<title>BLUE GAME</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css?v=20261113">
+</head>
+<body>
+
+<header>
+  <h1>BLUE GAME 🎮</h1>
+  <p>نظام إدارة الصالة</p>
+</header>
+
+<main>
+  <section class="welcome">
+    <h2>لوحة إدارة الصالة</h2>
+    <p>إدارة الأجهزة والجلسات والمبيعات</p>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <span>كل الأجهزة</span>
+      <strong id="total">8</strong>
+    </div>
+    <div class="stat">
+      <span>مشغولة</span>
+      <strong id="busy">0</strong>
+    </div>
+    <div class="stat">
+      <span>فارغة</span>
+      <strong id="free">8</strong>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>🎮 أجهزة البلايستيشن</h2>
+    <button id="addDevice">+ إضافة جهاز</button>
+  </div>
+
+  <section id="devices" class="devices"></section>
+
+  <section class="menu">
+    <button>🥤 المشروبات والأراجيل</button>
+    <button>🧾 الفواتير والأرشيف</button>
+    <button>📦 جرد المخزون</button>
+    <button>📊 التقارير والغلة</button>
+    <button>👤 حساب صاحب المحل</button>
+  </section>
+</main>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --blue: #168cff;
+  --light: #72c4ff;
+  --card: rgba(16, 43, 72, 0.88);
+  --border: rgba(66, 160, 255, 0.3);
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background:
+    radial-gradient(ellipse at top right, #103e70 0%, transparent 45%),
+    radial-gradient(ellipse at bottom left, #092b50 0%, transparent 45%),
+    linear-gradient(145deg, #050d1b, #071b35 55%, #061326);
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, #071b35, #0759a5);
+  padding: 28px 15px;
+  text-align: center;
+  border-bottom: 1px solid #168cff;
+  box-shadow: 0 5px 25px #087bd133;
+}
+
+header h1 {
+  margin: 0;
+  color: var(--light);
+  font-size: 30px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 18px #168cff66;
+}
+
+header p {
+  color: #d5eaff;
+  margin-bottom: 0;
+}
+
+main {
+  padding: 16px;
+  max-width: 650px;
+  margin: auto;
+}
+
+.welcome {
+  background: linear-gradient(135deg, #12365a, #102744);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 25px #0003;
+}
+
+.welcome h2 {
+  color: var(--light);
+}
+
+.welcome p {
+  color: #c5d9ed;
+  font-size: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin: 18px 0;
+}
+
+.stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 15px 5px;
+  text-align: center;
+  box-shadow: 0 5px 18px #0003;
+}
+
+.stat span {
+  display: block;
+  color: #b9d5ee;
+  font-size: 12px;
+}
+
+.stat strong {
+  display: block;
+  color: var(--light);
+  font-size: 24px;
+  margin-top: 7px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 22px 0 14px;
+}
+
+.section-title h2 {
+  font-size: 18px;
+}
+
+.devices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.device {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 10px;
+  text-align: center;
+  box-shadow: 0 7px 20px #0004;
+  transition: transform .2s, border-color .2s;
+}
+
+.device h3 {
+  color: var(--light);
+  margin: 5px;
+  font-size: 18px;
+}
+
+.device p {
+  color: #c5d9ed;
+  font-size: 13px;
+}
+
+.device.free {
+  border-bottom: 4px solid #19c784;
+}
+
+.device.busy {
+  border-bottom: 4px solid #ff5555;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform .15s, filter .15s, box-shadow .15s;
+}
+
+button:active {
+  transform: scale(.96);
+  filter: brightness(1.2);
+}
+
+button:focus-visible {
+  outline: 2px solid #72c4ff;
+  outline-offset: 3px;
+}
+
+#addDevice,
+.device button {
+  background: linear-gradient(135deg, #168cff, #0759b5);
+  color: white;
+  border: 1px solid #56adff55;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: bold;
+  box-shadow: 0 4px 14px #087bd133;
+}
+
+.device button {
+  width: 100%;
+  margin-top: 7px;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.menu button {
+  background: linear-gradient(145deg, #153b60, #0d2745);
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 8px;
+  font-size: 15px;
+  font-weight: bold;
+  min-height: 75px;
+  box-shadow: 0 6px 18px #0003;
+}
+
+.menu button:active {
+  background: linear-gradient(135deg, #087bd1, #0759a5);
+}
+
+@media (max-width: 350px) {
+  .menu,
+  .devices {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(1, 8, 20, .82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  backdrop-filter: blur(7px);
+}
+
+.app-modal {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #15395d, #081b32);
+  border: 1px solid #268ee8;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 15px 50px #0009, 0 0 25px #168cff22;
+  text-align: center;
+}
+
+.app-modal h2 {
+  color: #80caff;
+  margin: 0 0 20px;
+}
+
+.app-modal-content {
+  display: grid;
+  gap: 12px;
+}
+
+.choice-button {
+  width: 100%;
+  min-height: 58px;
+  padding: 13px;
+  border: 1px solid #398fd4;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #087bd1, #10416e);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.choice-button strong {
+  color: #bce3ff;
+  font-size: 13px;
+}
+
+.modal-cancel {
+  width: 100%;
+  margin-top: 15px;
+  padding: 13px;
+  border: 1px solid #66829e;
+  border-radius: 12px;
+  background: #263c52;
+  color: white;
+  font-weight: bold;
+}
+
+.time-picker {
+  display: grid;
+  gap: 18px;
+}
+
+.time-unit {
+  background: #0a2039;
+  border: 1px solid #28669c;
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.time-unit span {
+  color: #bce3ff;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.number-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.number-controls button {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 13px;
+  background: #087bd1;
+  color: white;
+  font-size: 24px;
+}
+
+.number-controls strong {
+  min-width: 45px;
+  font-size: 27px;
+  color: #80caff;
+}
+
+.drink-list {
+  display: grid;
+  gap: 10px;
+}
+
+.drink-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  background: #0a2039;
+  border: 1px solid #28669c;
+  border-radius: 14px;
+}
+
+.drink-info {
+  display: grid;
+  gap: 6px;
+  text-align: right;
+}
+
+.drink-info strong {
+  color: white;
+  font-size: 14px;
+}
+
+.drink-info span {
+  color: #80caff;
+  font-size: 13px;
+}
+
+.drink-controls {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.drink-controls button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: #087bd1;
+  color: white;
+  font-size: 20px;
+}
+
+.drink-controls strong {
+  min-width: 20px;
+  color: #80caff;
+  font-size: 17px;
+}
+
+.drink-total {
+  padding: 14px;
+  border-radius: 12px;
+  background: #12365a;
+  color: white;
+  font-weight: bold;
+}
+
+.drink-total strong {
+  color: #80caff;
+}
