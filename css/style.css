@@ -379,3 +379,92 @@ button:focus-visible {
 .drink-total strong {
   color: #80caff;
 }
+
+.auth-gate {
+  max-width: 450px;
+  margin: 35px auto;
+  padding: 16px;
+}
+
+.auth-card {
+  background: linear-gradient(145deg, #12365a, #102744);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 18px;
+  text-align: center;
+  box-shadow: 0 8px 25px #0005;
+}
+
+.auth-card h2 {
+  color: var(--light);
+}
+
+.auth-card label {
+  display: block;
+  text-align: right;
+  margin: 14px 0 7px;
+  color: #d5eaff;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #071b35;
+  color: white;
+  font-size: 16px;
+}
+
+#authSubmit,
+#signOut {
+  background: linear-gradient(135deg, #168cff, #0759b5);
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+#authSubmit {
+  width: 100%;
+}
+
+.auth-toggle {
+  background: transparent;
+  border: 0;
+  color: var(--light);
+  padding: 14px;
+}
+
+#authMessage {
+  color: #ffd27a;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.account-bar {
+  max-width: 650px;
+  margin: 12px auto;
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+#accountEmail,
+#syncStatus {
+  font-size: 12px;
+  color: var(--light);
+  overflow-wrap: anywhere;
+}
+
+#signOut {
+  margin: 0;
+}

@@ -23,6 +23,7 @@ devices.forEach(d => {
 
 function saveDevices() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(devices));
+  if (typeof queueCloudSave === "function") queueCloudSave();
 }
 
 
