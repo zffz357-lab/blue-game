@@ -57,29 +57,54 @@ function queueCloudSave() {
 async function openOwnerSession(session) {
   cloudOwner = session.user;
 
-  const { data, error } = await cloudClient
+  if (!window.BLUE_GAME_SHARED || !window.BLUE_GAME_SHARED.client) {
+    throw new Error("نظام البيانات المشتركة غير متصل");
+  }
+
+  const { data: legacyData, error: legacyError } = await cloudClient
     .from("shop_data")
-    .select("*")
+    .select("inventory")
     .eq("owner_id", cloudOwner.id)
     .maybeSingle();
 
-  if (error) throw error;
+  if (legacyError) throw legacyError;
 
-  if (data) {
-    cloudInventory = data.inventory || [];
+  cloudInventory = legacyData?.inventory || [];
 
-    if (localStorage.getItem(PENDING_KEY) === "1") {
-      await pushCloudData();
-    } else {
-      devices = data.devices || [];
-      invoices = data.invoices || [];
-      localStorage.setItem("blueGameDevices", JSON.stringify(devices));
-      localStorage.setItem("blueGameInvoices", JSON.stringify(invoices));
-      renderDevices();
-    }
-  } else {
-    await pushCloudData();
+  // نقل الأجهزة والأسعار والمنتجات القديمة مرة واحدة، دون الفواتير.
+  await window.BLUE_GAME_SHARED.migrateOldData();
+
+  const [deviceRows, invoiceRows, rateResult] = await Promise.all([
+    window.BLUE_GAME_SHARED.loadDevices(),
+    window.BLUE_GAME_SHARED.loadInvoices(),
+    cloudClient.from("shop_rates").select("device_type,hourly_price")
+  ]);
+
+  if (rateResult.error) throw rateResult.error;
+
+  const rates = {};
+  (rateResult.data || []).forEach(rate => {
+    rates[rate.device_type] = Number(rate.hourly_price);
+  });
+
+  function applySharedDevices(rows) {
+    devices = (rows || []).map(row => ({
+      id: row.device_id,
+      name: row.device_name,
+      type: row.device_type,
+      price: rates[row.device_type] || 0,
+      session: row.session || null,
+      busy: !!row.session
+    }));
+
+    localStorage.setItem("blueGameDevices", JSON.stringify(devices));
+    renderDevices();
   }
+
+  applySharedDevices(deviceRows);
+
+  invoices = (invoiceRows || []).map(row => row.invoice);
+  localStorage.setItem("blueGameInvoices", JSON.stringify(invoices));
 
   cloudReady = true;
   document.getElementById("authGate").hidden = true;
@@ -87,31 +112,17 @@ async function openOwnerSession(session) {
   document.getElementById("accountBar").hidden = false;
   document.getElementById("accountEmail").textContent = cloudOwner.email || "";
   renderDevices();
-  syncMessage("☁️ البيانات متزامنة");
+  syncMessage("☁️ البيانات محمّلة من النظام المشترك");
 
-  if (cloudChannel) await cloudClient.removeChannel(cloudChannel);
+  if (cloudChannel) {
+    await cloudClient.removeChannel(cloudChannel);
+    cloudChannel = null;
+  }
 
-  cloudChannel = cloudClient.channel("shop-" + cloudOwner.id)
-    .on("postgres_changes", {
-      event: "*",
-      schema: "public",
-      table: "shop_data",
-      filter: "owner_id=eq." + cloudOwner.id
-    }, payload => {
-      if (!payload.new || cloudSaveTimer ||
-          localStorage.getItem(PENDING_KEY) === "1") return;
-
-      devices = payload.new.devices || [];
-      invoices = payload.new.invoices || [];
-      cloudInventory = payload.new.inventory || [];
-
-      localStorage.setItem("blueGameDevices", JSON.stringify(devices));
-      localStorage.setItem("blueGameInvoices", JSON.stringify(invoices));
-
-      renderDevices();
-      syncMessage("🔄 تم التحديث من جهاز آخر");
-    })
-    .subscribe();
+  cloudChannel = window.BLUE_GAME_SHARED.watchDevices(rows => {
+    applySharedDevices(rows);
+    syncMessage("🔄 تم تحديث الأجهزة من جهاز آخر");
+  });
 }
 
 async function initCloudAuth() {
@@ -121,6 +132,10 @@ async function initCloudAuth() {
   }
 
   cloudClient = window.supabase.createClient(CLOUD_URL, CLOUD_KEY);
+  window.cloudClient = cloudClient;
+  if (window.BLUE_GAME_SHARED) {
+    window.BLUE_GAME_SHARED.connect(cloudClient);
+  }
 
   document.getElementById("authToggle").onclick = () => {
     authMode = authMode === "login" ? "signup" : "login";

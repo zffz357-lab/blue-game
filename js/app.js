@@ -23,6 +23,10 @@ devices.forEach(d => {
 
 function saveDevices() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(devices));
+
+  // عند استخدام قاعدة البيانات المشتركة لا نرفع نسخة الأجهزة القديمة كاملة.
+  if (window.BLUE_GAME_SHARED && window.BLUE_GAME_SHARED.client) return;
+
   if (typeof queueCloudSave === "function") queueCloudSave();
 }
 
@@ -55,7 +59,7 @@ function chooseType() {
       </button>
     `);
 
-    modal.addEventListener("click", e => {
+    modal.addEventListener("click", async e => {
       const button = e.target.closest("[data-type]");
       if (button) {
         resolve({
@@ -212,6 +216,28 @@ async function startSession(device) {
     session.fixedAmount = calculatePrice(totalMinutes, selected.price);
   }
 
+  if (window.BLUE_GAME_SHARED && window.BLUE_GAME_SHARED.client) {
+    try {
+      const sharedSession = await window.BLUE_GAME_SHARED.startSession(
+        device.id,
+        selected.type,
+        mode,
+        mode === "fixed" ? session.durationMinutes : null
+      );
+
+      device.type = selected.type;
+      device.price = selected.price;
+      device.session = sharedSession;
+      device.busy = true;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(devices));
+      renderDevices();
+    } catch (error) {
+      console.error("بدء الجلسة المشتركة فشل:", error);
+      alert("ما قدرنا نشغّل الجلسة: " + (error.message || error));
+    }
+    return;
+  }
+
   device.type = selected.type;
   device.price = selected.price;
   device.session = session;
@@ -220,7 +246,7 @@ async function startSession(device) {
   renderDevices();
 }
 
-function addPurchase(device) {
+async function addPurchase(device) {
   const items = [
     {name: "ميلو", price: 5000},
     {name: "شاي", price: 2500},
@@ -264,7 +290,7 @@ function addPurchase(device) {
       total.toLocaleString("en-US") + " ل.س";
   }
 
-  modal.addEventListener("click", e => {
+  modal.addEventListener("click", async e => {
     const control = e.target.closest("[data-item]");
     if (control) {
       const i = Number(control.dataset.item);
@@ -285,14 +311,33 @@ function addPurchase(device) {
 
       if (!device.session.purchases) device.session.purchases = [];
 
-      selected.forEach(item => {
-        const quantity = quantities[items.indexOf(item)];
-        device.session.purchases.push({
-          name: item.name,
-          price: item.price,
-          quantity
+      if (window.BLUE_GAME_SHARED && window.BLUE_GAME_SHARED.client) {
+        try {
+          let remoteItems = device.session.purchases || [];
+
+          for (const item of selected) {
+            const quantity = quantities[items.indexOf(item)];
+            remoteItems = await window.BLUE_GAME_SHARED.addPurchase(
+              device.id, item.name, quantity
+            );
+          }
+
+          device.session.purchases = remoteItems;
+        } catch (error) {
+          console.error(error);
+          alert("تعذرت إضافة الطلبات: " + (error.message || error));
+          return;
+        }
+      } else {
+        selected.forEach(item => {
+          const quantity = quantities[items.indexOf(item)];
+          device.session.purchases.push({
+            name: item.name,
+            price: item.price,
+            quantity
+          });
         });
-      });
+      }
 
       saveDevices();
       modal.remove();
@@ -306,7 +351,7 @@ function addPurchase(device) {
 }
 
 
-function finishSession(device) {
+async function finishSession(device) {
   if (!device.session) return;
 
   const session = device.session;
@@ -376,6 +421,24 @@ function finishSession(device) {
     grandTotal.toLocaleString("en-US") + " ل.س";
 
   if (!confirm(details + "\n\nتأكيد إنهاء الجلسة وحفظ الفاتورة؟")) return;
+
+  if (window.BLUE_GAME_SHARED && window.BLUE_GAME_SHARED.client) {
+    try {
+      const savedInvoice = await window.BLUE_GAME_SHARED.finishSession(device.id);
+
+      device.session = null;
+      device.busy = false;
+      saveDevices();
+      renderDevices();
+
+      alert(details + "\n\nتم حفظ الفاتورة وإغلاق الجلسة");
+      return;
+    } catch (error) {
+      console.error("إنهاء الجلسة فشل:", error);
+      alert("لم يتم إنهاء الجلسة: " + (error.message || error));
+      return;
+    }
+  }
 
   invoices.push(invoice);
   localStorage.setItem(INVOICES_KEY, JSON.stringify(invoices));
