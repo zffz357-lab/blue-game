@@ -468,3 +468,15 @@ button:focus-visible {
 #signOut {
   margin: 0;
 }
+
+.quick-help {
+  margin: 24px 0;
+  padding: 18px;
+  background: rgba(16,43,72,.88);
+  border: 1px solid rgba(66,160,255,.3);
+  border-radius: 16px;
+  color: #d5eaff;
+  line-height: 1.9;
+}
+.quick-help h3 { color: #72c4ff; margin-top: 0; }
+.quick-help p { margin: 7px 0; }
